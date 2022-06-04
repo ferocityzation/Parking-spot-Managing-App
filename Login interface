@@ -2,78 +2,92 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from tkinter.messagebox import showinfo
-import os
+from pathlib import Path
+import yaml
 
 
 
-class Login(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class Login:
+    def __init__(self, root, login_success_callback):
+        # It's better to define the root application outside of your class
+        self.root = root
 
-        self.geometry('300x150')
-        self.resizable(0, 0)
-        self.title('Login')
+        # Give the class instance a function to call when it successfully logs in
+        self.login_success_callback = login_success_callback
+        print(self.login_success_callback)
+
+        self.root.geometry('300x150')
+        self.root.resizable(0, 0)
+        self.root.title('Login')
         self.create_menu()
         self.create_buttons()
         self.create_entries()
         self.create_headings()
         
         # configura a grelha
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=3)
+        self.root.columnconfigure(0, weight=1)
+        self.root.columnconfigure(1, weight=3)
+
+        # Never create instance variables outside of the init method
     
         
     def create_headings (self):
-        heading = ttk.Label(self, text='Bem-vindo', style='Heading.TLabel', font=('Helvetica', 11))
+        heading = ttk.Label(self.root, text='Bem-vindo', style='Heading.TLabel', font=('Helvetica', 11))
         heading.grid(column=0, row=0, columnspan=2, pady=5, sticky=tk.N)
 
         
     def create_entries(self):
-                      
+                    
         #acrescenta uma linha vazia para poder puxar conteúdos para baixo
         paddings2 = {'padx': 1, 'pady': 1}
-        espaco = ttk.Label(self, text="")
+        espaco = ttk.Label(self.root, text="")
         espaco.grid(column=1, row=3, sticky=tk.E, **paddings2)
-        espaco2 = ttk.Label(self, text="")
+        espaco2 = ttk.Label(self.root, text="")
         espaco.grid(column=1, row=5, sticky=tk.E, **paddings2)
-       
         
         paddings = {'padx': 5, 'pady': 5}
         entry_font = {'font': ('Helvetica', 10)}
         
+        # Never create instance variables outside of the init method
         self.username = tk.StringVar()
         self.password = tk.StringVar()
         # username
-        username_label = ttk.Label(self, text="Username:")
+        username_label = ttk.Label(self.root, text="Username:")
         username_label.grid(column=0, row=1, sticky=tk.W, **paddings)
 
-        self.username_entry = ttk.Entry(self, textvariable=self.username, **entry_font)
+        # Never create instance variables outside of the init method
+        self.username_entry = ttk.Entry(self.root, textvariable=self.username, **entry_font)
         self.username_entry.grid(column=1, row=1, sticky=tk.E, **paddings)
 
         # password
-        password_label = ttk.Label(self, text="Password:")
+        password_label = ttk.Label(self.root, text="Password:")
         password_label.grid(column=0, row=2, sticky=tk.W, **paddings)
 
-        self.password_entry = ttk.Entry(self, textvariable=self.password, show="*", **entry_font)
+        # Never create instance variables outside of the init method
+        self.password_entry = ttk.Entry(self.root, textvariable=self.password, show="*", **entry_font)
         self.password_entry.grid(column=1, row=2, sticky=tk.E, **paddings)
 
 
     def create_buttons(self):
         
         #Frame onde os butões ficarão alocados
-        self.frame_buttons = Frame(self)
+        # Never create instance variables outside of the init method
+        self.frame_buttons = Frame(self.root)
         self.frame_buttons.grid(row=4,column=1)
         
         # Frame para editar os butões em conjunto
+        # Never create instance variables outside of the init method
         self.frame_edit_button = Frame(self.frame_buttons)
         self.frame_edit_button.grid(row=0,column=0, padx=20,pady=10)
         
         # criação butões 
+        # Never create instance variables outside of the init method
         self.button_login = Button(self.frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
         self.button_registar = Button(self.frame_edit_button,text="Registar",  command = None, font=('Helvetica', 9))              #button that will take you the registration window
         self.button_precario = Button(self.frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
         
         # grid dos butões
+        # Never create instance variables outside of the init method
         self.button_login.grid(row=0,column=0, sticky=tk.E)
         self.button_registar.grid(row=0,column=1, sticky=tk.E)
         self.button_precario.grid(row=0,column=3, sticky=tk.E)
@@ -82,40 +96,78 @@ class Login(tk.Tk):
         
     def create_menu(self):  #Creates the menu at the top left. Not necessary to have
         # cria o menu "Sair"
-        my_menu = Menu(self)
-        self.config(menu = my_menu)
+        my_menu = Menu(self.root)
+        self.root.config(menu = my_menu)
         menu = Menu(my_menu)
         my_menu.add_cascade(label='Sair', menu=menu)                            
         menu.add_command(label='quit', command = self.app_end)
         
     def app_end(self):
-		# fecha a app
-        self.destroy()
+        # fecha a app
+        self.root.destroy()
     
     def precario_clicked(self):      #Creates the pop up that shows the price of the park. It's not really beautiful, but I'll look into it if I have any time left
         showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
-    
             
+
+    def login_success(self, message=""):
+        self.app_end()
+        self.login_success_callback(message)
+        
     def verificar_login(self):
-        username1 = self.username_entry
-        password1 = self.password_entry
+        # Don't forget to call .get to actually get the text
+        username1 = self.username_entry.get()
+        password1 = self.password_entry.get()
         self.username_entry.delete(0, END)
         self.password_entry.delete(0, END)
-     
-        list_of_files = os.listdir()         #I saw a code where it stored values as this. Still don't know how to work this out. Right now, it only says "User not found" and cleans the entries, because I haven't stored anything
-        if username1 in list_of_files:
-            file1 = open(username1, "r")
-            verify = file1.read().splitlines()
-            if password1 in verify:
-                login_sucess()
-     
-            else:
-                password_not_recognised()
-     
+    
+        # Use Pathlib instead of os, it's easier and better
+        # Create a Path instance that points to the user records file
+        # DO NOT rely on the current working directory for this type of thing!
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+
+        if not user_records_file.exists():
+            with open(user_records_file, "w+") as f:
+                # Make an empty file
+                pass
+
+        #I saw a code where it stored values as this. Still don't know how to work this out. Right now, it only says "User not found" and cleans the entries, because I haven't stored anything
+        # Get all user records from the file
+        with open(user_records_file, "r") as f:
+            user_records = yaml.load(f, Loader=yaml.FullLoader)
+
+        for user_record in user_records:
+            print(user_record)
+            print(username1)
+            print(password1)
+
+            if user_record["username"] == username1:
+                if user_record["password"] == password1:
+                    self.login_success(user_record["parking_pass"])
+                    break
+    
+                else:
+                    showinfo(
+                        title='Incorrect password!',
+                        message='Incorrect password! Try again'
+                    )
+                    break
+    
         else:
             showinfo(title='Erro no login',
-                     message='Utlizador não encontrado')
+                    message='Utlizador não encontrado')
     
 if __name__ == "__main__":
-    Login = Login()
-    Login.mainloop()
+    # login.py should not be the main entry point for the program
+    # but we can use a dummy login result
+    def when_logged_in(parking_status):
+        print("Login success, exiting")
+        showinfo(title="Congratulations, you have logged in!", message="Congratulations, you have logged in!")
+        showinfo(title="Parking status", message=parking_status)
+
+
+    # Class instance variables should be snake_case or camelCase
+    root = tk.Tk()
+    login = Login(root, when_logged_in)
+    root.focus_force()
+    root.mainloop()
