@@ -1,0 +1,64 @@
+import tkinter as tk
+from tkinter import ttk
+from tkinter import *
+from tkinter.messagebox import showinfo
+import os
+
+
+
+class Registar(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.geometry('280x310')
+        self.resizable(0, 0)
+        self.title('Registar')
+        self.create_entries_Registar()
+        self.create_buttons()
+        
+ 
+    def create_entries_Registar(self):   
+        self.username_registo = StringVar()
+        self.password_registo = StringVar()
+        self.confirmar_pass__registo = StringVar()
+        self.matricula = StringVar()
+ 
+        lol = Label(self, text="Please enter details below", bg="#dad2d0")
+        lol.pack()
+        espaco = Label(self, text="")
+        espaco.pack()
+        username_lable = Label(self, text="Username * ")
+        username_lable.pack()
+        self.username_entry = Entry(self, textvariable=self.username_registo)
+        self.username_entry.pack()
+        password_lable = Label(self, text="Password * ")
+        password_lable.pack()
+        self.password_entry = Entry(self, textvariable=self.password_registo, show='*')
+        self.password_entry.pack()
+        confirmar_pass = Label(self, text="Confirme a Password * ")
+        confirmar_pass.pack()
+        self.confirmar_pass = Entry(self, textvariable=self.confirmar_pass__registo, show='*')
+        self.confirmar_pass.pack()
+        matricula = Label(self, text="Digite a sua matrícula * ")
+        matricula.pack()
+        self.matricula = Entry(self, textvariable=self.matricula)
+        self.matricula.pack()
+        espaco = Label(self, text="")
+        espaco.pack()
+    
+    
+    def create_buttons(self):
+        # criação butões 
+        self.button_regist = Button(self,text="Registar",  command= None, font=('Helvetica', 9))
+        self.button_voltar = Button(self,text="Voltar",command= None, font=('Helvetica', 9))
+        self.button_precario = Button(self,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9))
+        self.button_regist.pack()
+        self.button_precario.pack()
+        self.button_voltar.pack()
+        
+    def precario_clicked(self):
+        showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
+    
+
+if __name__ == "__main__":
+    Registar = Registar()
+    Registar.mainloop()
