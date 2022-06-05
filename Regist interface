@@ -54,8 +54,8 @@ class Registar:
 
     def create_buttons(self):
         # criação butões 
-        button_regist = Button(self.root,text="Registar",  command= None, font=('Helvetica', 9))
-        button_voltar = Button(self.root,text="Voltar",command= lambda: master.switch_frame(Login), font=('Helvetica', 9))
+        button_regist = Button(self.root,text="Registar",  command= self.registo, font=('Helvetica', 9))
+        button_voltar = Button(self.root,text="Voltar",command= None, font=('Helvetica', 9))
         button_precario = Button(self.root,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9))
         button_regist.pack()
         button_precario.pack()
@@ -70,9 +70,33 @@ class Registar:
     def precario_clicked(self):      #Creates the pop up that shows the price of the park. It's not really beautiful, but I'll look into it if I have any time left
         showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
             
-        
+    def registo(self):  
+        username1 = self.username_entry.get()
+        password1 = self.password_entry.get()
+        password2 = self.confirmar_pass.get()
+        utilizador = "não existe"
+        if password1 != password2:
+            showinfo(title='Problema com a password',
+                    message='As palavras-chaves têm de coincidir')
+        else:    #doesn't work I'm trying to see how I can append information into the Yaml files. Also I would like to figure out how to change the information about a particular user
+            user_records_file = Path(__file__).parent / "user_records.yaml"
+            with open(user_records_file, "r") as f:
+                user_records = yaml.load(f, Loader=yaml.FullLoader)
 
-    
+            for user_record in user_records:
+                if user_record["username"] == username1:
+                    showinfo(title='Utilizador já existente',
+                            message='O seu nome de utilizador já existe, por favor escolha outro')
+                    utilizador = "existe"
+                    break
+            if utilizador == "não existe":
+                f.close()
+                user_records_file = Path(__file__).parent / "user_records.yaml"
+                with open(user_records_file, "a") as f:
+                    user_records = yaml.load(f, Loader=yaml.FullLoader)
+                
+                user_records.write(f"- parking_pass: inactive\npassword: {password1}\nusername: {username1}")
+        
 if __name__ == "__main__":
 
     root = tk.Tk()
