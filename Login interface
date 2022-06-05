@@ -9,7 +9,6 @@ import yaml
 
 class Login:
     def __init__(self, root, login_success_callback):
-        # It's better to define the root application outside of your class
         self.root = root
 
         # Give the class instance a function to call when it successfully logs in
@@ -26,10 +25,7 @@ class Login:
         
         # configura a grelha
         self.root.columnconfigure(0, weight=1)
-        self.root.columnconfigure(1, weight=3)
-
-        # Never create instance variables outside of the init method
-    
+        self.root.columnconfigure(1, weight=3)    
         
     def create_headings (self):
         heading = ttk.Label(self.root, text='Bem-vindo', style='Heading.TLabel', font=('Helvetica', 11))
@@ -48,15 +44,14 @@ class Login:
         paddings = {'padx': 5, 'pady': 5}
         entry_font = {'font': ('Helvetica', 10)}
         
-        # Never create instance variables outside of the init method
-        self.username = tk.StringVar()
-        self.password = tk.StringVar()
+        username = tk.StringVar()
+        password = tk.StringVar()
         # username
         username_label = ttk.Label(self.root, text="Username:")
         username_label.grid(column=0, row=1, sticky=tk.W, **paddings)
 
         # Never create instance variables outside of the init method
-        self.username_entry = ttk.Entry(self.root, textvariable=self.username, **entry_font)
+        self.username_entry = ttk.Entry(self.root, textvariable=username, **entry_font)
         self.username_entry.grid(column=1, row=1, sticky=tk.E, **paddings)
 
         # password
@@ -64,33 +59,33 @@ class Login:
         password_label.grid(column=0, row=2, sticky=tk.W, **paddings)
 
         # Never create instance variables outside of the init method
-        self.password_entry = ttk.Entry(self.root, textvariable=self.password, show="*", **entry_font)
+        self.password_entry = ttk.Entry(self.root, textvariable=password, show="*", **entry_font)
         self.password_entry.grid(column=1, row=2, sticky=tk.E, **paddings)
 
-
+                
     def create_buttons(self):
         
         #Frame onde os butões ficarão alocados
         # Never create instance variables outside of the init method
-        self.frame_buttons = Frame(self.root)
-        self.frame_buttons.grid(row=4,column=1)
+        frame_buttons = Frame(self.root)
+        frame_buttons.grid(row=4,column=1)
         
         # Frame para editar os butões em conjunto
         # Never create instance variables outside of the init method
-        self.frame_edit_button = Frame(self.frame_buttons)
-        self.frame_edit_button.grid(row=0,column=0, padx=20,pady=10)
+        frame_edit_button = Frame(frame_buttons)
+        frame_edit_button.grid(row=0,column=0, padx=20,pady=10)
         
         # criação butões 
         # Never create instance variables outside of the init method
-        self.button_login = Button(self.frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
-        self.button_registar = Button(self.frame_edit_button,text="Registar",  command = None, font=('Helvetica', 9))              #button that will take you the registration window
-        self.button_precario = Button(self.frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
+        button_login = Button(frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
+        button_registar = Button(frame_edit_button,text="Registar",  command = None, font=('Helvetica', 9))              #button that will take you the registration window
+        button_precario = Button(frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
         
         # grid dos butões
         # Never create instance variables outside of the init method
-        self.button_login.grid(row=0,column=0, sticky=tk.E)
-        self.button_registar.grid(row=0,column=1, sticky=tk.E)
-        self.button_precario.grid(row=0,column=3, sticky=tk.E)
+        button_login.grid(row=0,column=0, sticky=tk.E)
+        button_registar.grid(row=0,column=1, sticky=tk.E)
+        button_precario.grid(row=0,column=3, sticky=tk.E)
         
 
         
@@ -121,8 +116,6 @@ class Login:
         self.username_entry.delete(0, END)
         self.password_entry.delete(0, END)
     
-        # Use Pathlib instead of os, it's easier and better
-        # Create a Path instance that points to the user records file
         # DO NOT rely on the current working directory for this type of thing!
         user_records_file = Path(__file__).parent / "user_records.yaml"
 
@@ -131,7 +124,6 @@ class Login:
                 # Make an empty file
                 pass
 
-        #I saw a code where it stored values as this. Still don't know how to work this out. Right now, it only says "User not found" and cleans the entries, because I haven't stored anything
         # Get all user records from the file
         with open(user_records_file, "r") as f:
             user_records = yaml.load(f, Loader=yaml.FullLoader)
