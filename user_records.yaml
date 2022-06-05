@@ -1,0 +1,6 @@
+- parking_pass: active
+  password: test1
+  username: test_user_1
+- parking_pass: inactive
+  password: test2
+  username: test_user_2
