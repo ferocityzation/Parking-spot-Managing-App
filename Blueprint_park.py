@@ -19,6 +19,11 @@ class Example(tk.Frame):
         self.canvas.tag_bind("parking-spot", "<1>", self.change_color)
         self.count = 0
         self.draw()
+        
+        tk.Label(self, text="\n").pack()
+        self.button_precario = tk.Button(self,text="Preçário",command= None, font=('Helvetica', 13))
+        self.button_precario.pack()
+        tk.Label(self, text="").pack()
 
     def draw(self):
         self.items = {}
@@ -53,6 +58,9 @@ class Example(tk.Frame):
 
             
         self.canvas.itemconfigure(item, fill=new_color)
+        
+    
+        
 
 ex = Example()
 ex.pack(fill="both", expand=True)
