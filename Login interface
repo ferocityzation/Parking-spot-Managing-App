@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import *
 from tkinter.messagebox import showinfo
 from pathlib import Path
+from Registar_ligação import Registar
 import yaml
 
 
@@ -78,7 +79,7 @@ class Login:
         # criação butões 
         # Never create instance variables outside of the init method
         button_login = Button(frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
-        button_registar = Button(frame_edit_button,text="Registar",  command = None, font=('Helvetica', 9))              #button that will take you the registration window
+        button_registar = Button(frame_edit_button,text="Registar",  command = lambda: master.switch_frame(Registar), font=('Helvetica', 9))              #button that will take you the registration window
         button_precario = Button(frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
         
         # grid dos butões
@@ -119,7 +120,7 @@ class Login:
         # DO NOT rely on the current working directory for this type of thing!
         user_records_file = Path(__file__).parent / "user_records.yaml"
 
-        if not user_records_file.exists():
+        if not user_records_file.exists():                #cria o ficheiro yalm onde ficarão guardados os logins
             with open(user_records_file, "w+") as f:
                 # Make an empty file
                 pass
