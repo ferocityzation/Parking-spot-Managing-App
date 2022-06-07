@@ -4,10 +4,12 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
+from modelo_login import Login
 
 
 
 class Registar:
+    status = "não registou"           #saber se o utilizador fez login ou registou para saber se tenho de pegar no user através do login ou do Registar
     def __init__(self, root):
     
         self.root = root
@@ -75,7 +77,14 @@ class Registar:
         password1 = self.password_entry.get()
         password2 = self.confirmar_pass.get()
         utilizador = "não existe"
-        if password1 != password2:
+        
+        if username1 == "":
+            showinfo(title='Problema no username',
+                    message='Digite um username')
+        elif password1 == "":
+            showinfo(title='Problema na password',
+                    message='Digite uma password')
+        elif password1 != password2:
             showinfo(title='Problema com a password',
                     message='As palavras-chaves têm de coincidir')
         else:    
@@ -91,6 +100,7 @@ class Registar:
                     break
             f.close()
             if utilizador == "não existe":
+                Registar.status = "registou"   
                 user_records_file = Path(__file__).parent / "user_records.yaml"
                 with open(user_records_file, "r") as f:
                     login_records = yaml.load(f, Loader=yaml.FullLoader)
@@ -103,7 +113,8 @@ class Registar:
                 
                 with open(user_records_file, "w+") as f:
                     f.write(yaml.dump(login_records))
-        
+    def da_user(self):
+        return self.username_entry.get()
 if __name__ == "__main__":
 
     root = tk.Tk()
