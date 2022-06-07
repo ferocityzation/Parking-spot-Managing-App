@@ -149,7 +149,10 @@ class Login:
         else:
             showinfo(title='Erro no login',
                     message='Utlizador não encontrado')
-    
+            
+        def da_user(self):
+            return self.username_entry.get()
+        
 if __name__ == "__main__":
     # login.py should not be the main entry point for the program
     # but we can use a dummy login result
@@ -164,4 +167,5 @@ if __name__ == "__main__":
     login = Login(root, when_logged_in)
     root.focus_force()
     root.mainloop()
+    
     
