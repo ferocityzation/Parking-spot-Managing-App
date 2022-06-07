@@ -78,7 +78,7 @@ class Registar:
         if password1 != password2:
             showinfo(title='Problema com a password',
                     message='As palavras-chaves têm de coincidir')
-        else:    #doesn't work I'm trying to see how I can append information into the Yaml files. Also I would like to figure out how to change the information about a particular user
+        else:    
             user_records_file = Path(__file__).parent / "user_records.yaml"
             with open(user_records_file, "r") as f:
                 user_records = yaml.load(f, Loader=yaml.FullLoader)
@@ -89,13 +89,20 @@ class Registar:
                             message='O seu nome de utilizador já existe, por favor escolha outro')
                     utilizador = "existe"
                     break
+            f.close()
             if utilizador == "não existe":
-                f.close()
                 user_records_file = Path(__file__).parent / "user_records.yaml"
-                with open(user_records_file, "a") as f:
-                    user_records = yaml.load(f, Loader=yaml.FullLoader)
+                with open(user_records_file, "r") as f:
+                    login_records = yaml.load(f, Loader=yaml.FullLoader)
                 
-                user_records.write(f"- parking_pass: inactive\npassword: {password1}\nusername: {username1}")
+                login_records.append({
+                    "username": username1,
+                    "password": password1,
+                    "parking_pass": "active",
+                })
+                
+                with open(user_records_file, "w+") as f:
+                    f.write(yaml.dump(login_records))
         
 if __name__ == "__main__":
 
