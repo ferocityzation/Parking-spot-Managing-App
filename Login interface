@@ -3,8 +3,8 @@ from tkinter import ttk
 from tkinter import *
 from tkinter.messagebox import showinfo
 from pathlib import Path
-from Registar_ligação import Registar
 import yaml
+from Registar_ligação import Registar
 
 
 
@@ -79,7 +79,7 @@ class Login:
         # criação butões 
         # Never create instance variables outside of the init method
         button_login = Button(frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
-        button_registar = Button(frame_edit_button,text="Registar",  command = lambda: master.switch_frame(Registar), font=('Helvetica', 9))              #button that will take you the registration window
+        button_registar = Button(frame_edit_button,text="Registar",  command = self.chamar_registo, font=('Helvetica', 9))              #button that will take you the registration window
         button_precario = Button(frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
         
         # grid dos butões
@@ -149,10 +149,16 @@ class Login:
         else:
             showinfo(title='Erro no login',
                     message='Utlizador não encontrado')
-            
-        def da_user(self):
-            return self.username_entry.get()
-        
+    def chamar_registo (self):      
+        self.app_end()
+
+        if __name__ == "__main__":
+    
+            root = tk.Tk()
+            registar = Registar(root)
+            root.focus_force()
+            root.mainloop()
+    
 if __name__ == "__main__":
     # login.py should not be the main entry point for the program
     # but we can use a dummy login result
@@ -167,5 +173,3 @@ if __name__ == "__main__":
     login = Login(root, when_logged_in)
     root.focus_force()
     root.mainloop()
-    
-    
