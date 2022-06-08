@@ -8,7 +8,6 @@ import yaml
 
 
 class Registar:
-    status = "Não registou"
     def __init__(self, root):
     
         self.root = root
@@ -92,7 +91,6 @@ class Registar:
                     break
             f.close()
             if utilizador == "não existe":
-                status = "Registou"
                 user_records_file = Path(__file__).parent / "user_records.yaml"
                 with open(user_records_file, "r") as f:
                     login_records = yaml.load(f, Loader=yaml.FullLoader)
