@@ -1,106 +1,93 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun  5 17:47:39 2022
+@author: André
+"""
+
 import tkinter as tk
-from tkinter import ttk
-from tkinter import *
 from tkinter.messagebox import showinfo
-from pathlib import Path
 import yaml
+from pathlib import Path
 
+root = tk.Tk()
 
+class Planta(tk.Frame):
+    colunas = ["A","B","C","D","E"]
+    posicao = ""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.canvas = tk.Canvas(self, width=250, height=500)
+        self.canvas.pack(fill="both", expand=True)
 
-class Registar:
-    def __init__(self, root):
+        self.canvas.tag_bind("parking-spot", "<1>", self.change_color)
+        self.count = 0
+        self.draw()
+        self.gestao_ocupacao()
+        
+        tk.Label(self, text="\n").pack()
+        self.button_reservar = tk.Button(self,text="Reservar",command= None, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
+        self.button_reservar.pack()
+        self.button_precario = tk.Button(self,text="Preçário",command= None, font=('Helvetica', 13))
+        self.button_precario.pack()
+        tk.Label(self, text="").pack()
+        self.ultimo_item = ""
+
+    # @property 
+    # def ultimo_item(self):
+    #     return self.ultimo_item
     
-        self.root = root
+    # @ultimo_item.setter
+    # def ultimo_item(self,retangulo):
+    #     self.ultimo_item=retangulo
+        
+        
+    def draw(self):
+        self.items = {}
+        for vertical in range(5):
+            for horizontal in range(5): #vai-me prencheer ao longo das linhas
+                x = horizontal*50
+                y = vertical*100
+                item = self.canvas.create_rectangle(x, y, x+50, y+80, fill="green", tags=("parking-spot",))
+                self.items[str((Planta.colunas[horizontal],vertical+1))] = item
+        # self.items[("A",1)] = self.canvas.create_rectangle(0,0, 50, 100, fill="red", tags=("parking-spot",))   
+        print(self.items)        
+        
+    def gestao_ocupacao(self):
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            user_records = yaml.load(f, Loader=yaml.FullLoader)
 
-        self.root.geometry('280x310')
-        self.root.resizable(0, 0)
-        self.root.title('Registar')
-        self.create_entries_Registar()
-        self.create_buttons()
-        
-        
+        for user_record in user_records:
+            print(user_record["parking_pass"])
+            if user_record["parking_pass"] != "inactive":
+                self.canvas.itemconfigure(self.items[user_record["parking_pass"]], fill="red")
+                
 
-    def create_entries_Registar(self):   
+    def change_color(self, event):
+        item = self.canvas.find_withtag("current")    #tupple que guarda o valor da casa que clicarmos
+        current_color = self.canvas.itemcget(item, "fill")
+        if current_color == "green" and self.count == 0:
+            self.count = 1
+            new_color = "yellow"
         
-        username_registo = tk.StringVar()
-        password_registo = tk.StringVar()
-        confirmar_pass__registo = tk.StringVar()
-        matricula = tk.StringVar()
- 
-        titulo = ttk.Label(self.root, text="Por favor, digita as suas credenciais")
-        titulo.config(background = "#dad2d0")   #dá cor
-        titulo.pack()
-        espaco = ttk.Label(self.root, text="")
-        espaco.pack()
-        username_lable = ttk.Label(self.root, text="Username * ")
-        username_lable.pack()
-        self.username_entry = ttk.Entry(self.root, textvariable=username_registo)
-        self.username_entry.pack()
-        password_lable = ttk.Label(self.root, text="Password * ")
-        password_lable.pack()
-        self.password_entry = ttk.Entry(self.root, textvariable=password_registo, show='*')
-        self.password_entry.pack()
-        confirmar_pass = ttk.Label(self.root, text="Confirme a Password * ")
-        confirmar_pass.pack()
-        self.confirmar_pass = ttk.Entry(self.root, textvariable=confirmar_pass__registo, show='*')
-        self.confirmar_pass.pack()
-        matricula = ttk.Label(self.root, text="Digite a sua matrícula * ")
-        matricula.pack()
-        self.matricula = ttk.Entry(self.root, textvariable=matricula)
-        self.matricula.pack()
-        espaco = ttk.Label(self.root, text="")
-        espaco.pack()
+        elif current_color == "yellow":
+            self.count = 0
+            new_color = "green"
+        
+        elif current_color == "green" and self.count == 1:
+            showinfo(title='Erro na escolha do lugar',
+                    message='Só pode escolher um lugar de cada vez')
+        
+        elif current_color == "red":
+            showinfo(title='Lugar ocupado',
+                    message='Lugar ocupado, escolha outro lugar')
 
-
-    def create_buttons(self):
-        # criação butões 
-        button_regist = Button(self.root,text="Registar",  command= self.registo, font=('Helvetica', 9))
-        button_voltar = Button(self.root,text="Voltar",command= None, font=('Helvetica', 9))
-        button_precario = Button(self.root,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9))
-        button_regist.pack()
-        button_precario.pack()
-        button_voltar.pack()
-        
-        
-    def app_end(self):
-        # fecha a app
-        self.root.destroy()
+        self.canvas.itemconfigure(item, fill=new_color)
+        for posicao in self.items:
+            if self.items[posicao]==item[0]:
+                Planta.posicao=posicao      #guarda a posição da casa que cliquemos
         
     
-    def precario_clicked(self):      #Creates the pop up that shows the price of the park. It's not really beautiful, but I'll look into it if I have any time left
-        showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
-            
-    def registo(self):  
-        username1 = self.username_entry.get()
-        password1 = self.password_entry.get()
-        password2 = self.confirmar_pass.get()
-        utilizador = "não existe"
-        if password1 != password2:
-            showinfo(title='Problema com a password',
-                    message='As palavras-chaves têm de coincidir')
-        else:    
-            user_records_file = Path(__file__).parent / "user_records.yaml"
-            with open(user_records_file, "r") as f:
-                user_records = yaml.load(f, Loader=yaml.FullLoader)
-
-            for user_record in user_records:
-                if user_record["username"] == username1:
-                    showinfo(title='Utilizador já existente',
-                            message='O seu nome de utilizador já existe, por favor escolha outro')
-                    utilizador = "existe"
-                    break
-            f.close()
-            if utilizador == "não existe":
-                user_records_file = Path(__file__).parent / "user_records.yaml"
-                with open(user_records_file, "r") as f:
-                    login_records = yaml.load(f, Loader=yaml.FullLoader)
-                
-                login_records.append({
-                    "username": username1,
-                    "password": password1,
-                    "parking_pass": "active",
-                })
-                
-                with open(user_records_file, "w+") as f:
-                    f.write(yaml.dump(login_records))
-        
+ex = Planta()
+ex.pack(fill="both", expand=True)
+root.mainloop()        
