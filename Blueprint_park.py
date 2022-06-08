@@ -88,4 +88,6 @@ class Planta(tk.Frame):
                 Planta.posicao=posicao      #guarda a posição da casa que cliquemos
         
     
-        
+ex = Planta()
+ex.pack(fill="both", expand=True)
+root.mainloop()        
