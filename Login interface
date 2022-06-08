@@ -4,17 +4,17 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
-from Registar_ligação import Registar
-
-
+from Registar import Registar
+from Planta_tentativa import Planta
 
 class Login:
+    username_teste=""
     def __init__(self, root, login_success_callback):
         self.root = root
-
+        self.username="teste"
+        
         # Give the class instance a function to call when it successfully logs in
         self.login_success_callback = login_success_callback
-        print(self.login_success_callback)
 
         self.root.geometry('300x150')
         self.root.resizable(0, 0)
@@ -24,10 +24,15 @@ class Login:
         self.create_entries()
         self.create_headings()
         
+        
         # configura a grelha
         self.root.columnconfigure(0, weight=1)
         self.root.columnconfigure(1, weight=3)    
         
+    
+    # def username(self):
+    #     return self.username
+    
     def create_headings (self):
         heading = ttk.Label(self.root, text='Bem-vindo', style='Heading.TLabel', font=('Helvetica', 11))
         heading.grid(column=0, row=0, columnspan=2, pady=5, sticky=tk.N)
@@ -136,7 +141,11 @@ class Login:
 
             if user_record["username"] == username1:
                 if user_record["password"] == password1:
-                    self.login_success(user_record["parking_pass"])
+                    
+                    ex = Planta()
+                    ex.pack(fill="both", expand=True)
+                    root.mainloop()
+                    
                     break
     
                 else:
@@ -165,7 +174,7 @@ if __name__ == "__main__":
     def when_logged_in(parking_status):
         print("Login success, exiting")
         showinfo(title="Congratulations, you have logged in!", message="Congratulations, you have logged in!")
-        showinfo(title="Parking status", message=parking_status)
+        showinfo(title="Parking status", message=Gclass.username)
 
 
     # Class instance variables should be snake_case or camelCase
@@ -173,3 +182,4 @@ if __name__ == "__main__":
     login = Login(root, when_logged_in)
     root.focus_force()
     root.mainloop()
+
