@@ -3,19 +3,22 @@
 Created on Sun Jun  5 17:47:39 2022
 @author: André
 """
-
 import tkinter as tk
+from tkinter import ttk
+from tkinter import *
 from tkinter.messagebox import showinfo
-import yaml
 from pathlib import Path
+import yaml
+from Display import Display
 
-root = tk.Tk()
 
 class Planta(tk.Frame):
     colunas = ["A","B","C","D","E"]
     posicao = ""
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, root, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
+        self.root = root
         self.canvas = tk.Canvas(self, width=250, height=500)
         self.canvas.pack(fill="both", expand=True)
 
@@ -25,32 +28,22 @@ class Planta(tk.Frame):
         self.gestao_ocupacao()
         
         tk.Label(self, text="\n").pack()
-        self.button_reservar = tk.Button(self,text="Reservar",command= None, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
+        self.button_reservar = tk.Button(self,text="Reservar",command= self.chamar_display, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
         self.button_reservar.pack()
         self.button_precario = tk.Button(self,text="Preçário",command= None, font=('Helvetica', 13))
         self.button_precario.pack()
         tk.Label(self, text="").pack()
         self.ultimo_item = ""
-
-    # @property 
-    # def ultimo_item(self):
-    #     return self.ultimo_item
     
-    # @ultimo_item.setter
-    # def ultimo_item(self,retangulo):
-    #     self.ultimo_item=retangulo
-        
-        
+
     def draw(self):
         self.items = {}
-        for vertical in range(5):
+        for vertical in range(5):   #ao andares na vertical, vais alterar a linha
             for horizontal in range(5): #vai-me prencheer ao longo das linhas
                 x = horizontal*50
                 y = vertical*100
                 item = self.canvas.create_rectangle(x, y, x+50, y+80, fill="green", tags=("parking-spot",))
-                self.items[str((Planta.colunas[horizontal],vertical+1))] = item
-        # self.items[("A",1)] = self.canvas.create_rectangle(0,0, 50, 100, fill="red", tags=("parking-spot",))   
-        print(self.items)        
+                self.items[str((Planta.colunas[vertical],horizontal+1))] = item
         
     def gestao_ocupacao(self):
         user_records_file = Path(__file__).parent / "user_records.yaml"
@@ -58,7 +51,6 @@ class Planta(tk.Frame):
             user_records = yaml.load(f, Loader=yaml.FullLoader)
 
         for user_record in user_records:
-            print(user_record["parking_pass"])
             if user_record["parking_pass"] != "inactive":
                 self.canvas.itemconfigure(self.items[user_record["parking_pass"]], fill="red")
                 
@@ -88,6 +80,9 @@ class Planta(tk.Frame):
                 Planta.posicao=posicao      #guarda a posição da casa que cliquemos
         
     
-ex = Planta()
-ex.pack(fill="both", expand=True)
-root.mainloop()        
+    def chamar_display(self):
+        self.root.destroy()
+        root = tk.Tk()        
+        display = Display(root,self.user)
+        root.focus_force()
+        root.mainloop()
