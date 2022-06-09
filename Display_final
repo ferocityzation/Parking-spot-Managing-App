@@ -15,14 +15,51 @@ class Display:
     def __init__(self, root, user):  
         self.root=root
         self.user = user
+        self.place = self.lugar()
+        
+        self.root.geometry('230x120')
         self.create_labels_display()
         
+        
     def create_labels_display(self): 
+        paragrafo = tk.Label(self.root, text="")
+
+
         texto = tk.Label(self.root, text="O seu lugar é:")
-        lugar = ttk.Label(self.root, text=self.user, style='Heading.TLabel', font=('Helvetica', 11))
+        texto2 = ttk.Label(self.root, text="Feche a app ou clique no botão para sair", style='Heading.TLabel', font=('Helvetica', 8))
+        lugar = ttk.Label(self.root, text=self.place, style='Heading.TLabel', font=('Helvetica', 13))
+        button_sair = tk.Button(self.root,text="Vou sair do parque",  command= self.sair)     #button that runs the login verification
         texto.pack()
         lugar.pack()
         
-
+        texto2.pack()
+        
+        paragrafo.pack()
+        button_sair.pack()
         
 
+        
+    def lugar(self):  #retorna o lugar onde o utilzador está
+    
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            user_records = yaml.load(f, Loader=yaml.FullLoader)
+
+        for user_record in user_records:
+            if user_record["username"] == self.user:
+                return user_record["parking_pass"]
+            
+            
+    def sair(self):  #volta a reescrever "inativo" no ficheiro yalm
+    
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            login_records = yaml.load(f, Loader=yaml.FullLoader)
+    
+        for login_record in login_records:
+            if login_record["username"] == self.user:
+                login_record["parking_pass"] = "inactive"
+        with open(user_records_file, "w+") as f:
+            f.write(yaml.dump(login_records))
+        f.close()
+        self.root.destroy()
