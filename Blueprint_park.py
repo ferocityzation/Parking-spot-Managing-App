@@ -28,12 +28,12 @@ class Planta(tk.Frame):
         self.gestao_ocupacao()
         
         tk.Label(self, text="\n").pack()
-        self.button_reservar = tk.Button(self,text="Reservar",command= self.chamar_display, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
+        self.button_reservar = tk.Button(self,text="Reservar",command=self.chamar_display, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
         self.button_reservar.pack()
-        self.button_precario = tk.Button(self,text="Preçário",command= None, font=('Helvetica', 13))
+        self.button_precario = tk.Button(self,text="Preçário",command= self.precario_clicked, font=('Helvetica', 13))
         self.button_precario.pack()
         tk.Label(self, text="").pack()
-        self.ultimo_item = ""
+        self.posicao = ""
     
 
     def draw(self):
@@ -77,12 +77,30 @@ class Planta(tk.Frame):
         self.canvas.itemconfigure(item, fill=new_color)
         for posicao in self.items:
             if self.items[posicao]==item[0]:
-                Planta.posicao=posicao      #guarda a posição da casa que cliquemos
+                self.posicao=posicao      #guarda a posição da casa que cliquemos
         
+    def ocupar(self):
+        for i in self.items:
+            if i == self.posicao:
+                lugar = i
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            login_records = yaml.load(f, Loader=yaml.FullLoader)
+    
+        for login_record in login_records:
+            if login_record["username"] == self.user:
+                login_record["parking_pass"] = lugar
+        with open(user_records_file, "w+") as f:
+            f.write(yaml.dump(login_records))
+        f.close()
     
     def chamar_display(self):
+        self.ocupar()
         self.root.destroy()
         root = tk.Tk()        
         display = Display(root,self.user)
         root.focus_force()
         root.mainloop()
+        
+    def precario_clicked(self):      #Creates the pop up that shows the price of the park. It's not really beautiful, but I'll look into it if I have any time left
+        showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
