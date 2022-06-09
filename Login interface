@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun  5 17:47:39 2022
+@author: André
+"""
 import tkinter as tk
 from tkinter import ttk
 from tkinter import *
