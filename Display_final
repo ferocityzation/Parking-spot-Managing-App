@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun  8 23:33:38 2022
+
+@author: André
+"""
+import tkinter as tk
+from tkinter.messagebox import showinfo
+import yaml
+from pathlib import Path
+from tkinter import ttk
+
+
+class Display:
+    def __init__(self, root, user):  
+        self.root=root
+        self.user = user
+        self.create_labels_display()
+        
+    def create_labels_display(self): 
+        texto = tk.Label(self.root, text="O seu lugar é:")
+        lugar = ttk.Label(self.root, text=self.user, style='Heading.TLabel', font=('Helvetica', 11))
+        texto.pack()
+        lugar.pack()
+        
+
+        
+
