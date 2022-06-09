@@ -5,16 +5,11 @@ from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
 from Registar import Registar
-from Planta_tentativa import Planta
+from Planta_parque import Planta
 
 class Login:
-    username_teste=""
-    def __init__(self, root, login_success_callback):
+    def __init__(self, root):
         self.root = root
-        self.username="teste"
-        
-        # Give the class instance a function to call when it successfully logs in
-        self.login_success_callback = login_success_callback
 
         self.root.geometry('300x150')
         self.root.resizable(0, 0)
@@ -24,15 +19,12 @@ class Login:
         self.create_entries()
         self.create_headings()
         
-        
         # configura a grelha
         self.root.columnconfigure(0, weight=1)
         self.root.columnconfigure(1, weight=3)    
         
     
-    # def username(self):
-    #     return self.username
-    
+
     def create_headings (self):
         heading = ttk.Label(self.root, text='Bem-vindo', style='Heading.TLabel', font=('Helvetica', 11))
         heading.grid(column=0, row=0, columnspan=2, pady=5, sticky=tk.N)
@@ -135,16 +127,9 @@ class Login:
             user_records = yaml.load(f, Loader=yaml.FullLoader)
 
         for user_record in user_records:
-            print(user_record)
-            print(username1)
-            print(password1)
-
             if user_record["username"] == username1:
                 if user_record["password"] == password1:
-                    
-                    ex = Planta()
-                    ex.pack(fill="both", expand=True)
-                    root.mainloop()
+                    self.chamar_planta(username1)  
                     
                     break
     
@@ -158,6 +143,16 @@ class Login:
         else:
             showinfo(title='Erro no login',
                     message='Utlizador não encontrado')
+            
+    def chamar_planta (self, user):      
+        self.app_end()
+
+        if __name__ == "__main__":
+            root = tk.Tk()
+            ex = Planta(user, root)
+            ex.pack(fill="both", expand=True)
+            root.mainloop()  
+            
     def chamar_registo (self):      
         self.app_end()
 
@@ -169,17 +164,8 @@ class Login:
             root.mainloop()
     
 if __name__ == "__main__":
-    # login.py should not be the main entry point for the program
-    # but we can use a dummy login result
-    def when_logged_in(parking_status):
-        print("Login success, exiting")
-        showinfo(title="Congratulations, you have logged in!", message="Congratulations, you have logged in!")
-        showinfo(title="Parking status", message=Gclass.username)
-
-
-    # Class instance variables should be snake_case or camelCase
     root = tk.Tk()
-    login = Login(root, when_logged_in)
+    login = Login(root)
     root.focus_force()
     root.mainloop()
 
