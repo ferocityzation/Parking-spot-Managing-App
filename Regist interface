@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun  5 17:47:39 2022
+@author: André
+"""
 import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
+from Planta_parque import Planta
 
 
 
@@ -11,6 +17,10 @@ class Registar:
     def __init__(self, root):
     
         self.root = root
+        self.username_entry = ""
+        self.password_entry = ""
+        self.confirmar_pass = ""
+        self.matricula = ""
 
         self.root.geometry('280x310')
         self.root.resizable(0, 0)
@@ -55,11 +65,9 @@ class Registar:
     def create_buttons(self):
         # criação butões 
         button_regist = Button(self.root,text="Registar",  command= self.registo, font=('Helvetica', 9))
-        button_voltar = Button(self.root,text="Voltar",command= None, font=('Helvetica', 9))
         button_precario = Button(self.root,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9))
         button_regist.pack()
         button_precario.pack()
-        button_voltar.pack()
         
         
     def app_end(self):
@@ -72,6 +80,7 @@ class Registar:
             
     def registo(self):  
         username1 = self.username_entry.get()
+        print(username1)
         password1 = self.password_entry.get()
         password2 = self.confirmar_pass.get()
         utilizador = "não existe"
@@ -103,15 +112,13 @@ class Registar:
                 
                 with open(user_records_file, "w+") as f:
                     f.write(yaml.dump(login_records))
+                f.close()
+                self.chamar_planta(username1)
                 
-                self.chamar_planta(username1) 
-
-    # def chamar_planta (self, user):      
-    #     self.app_end()
-    
-    #     if __name__ == "__main__":
-    #         root = tk.Tk()
-    #         ex = Planta(user, root)
-    #         ex.pack(fill="both", expand=True)
-    #         root.mainloop()  
-        
+                
+    def chamar_planta (self, user): 
+        self.app_end()
+        root = tk.Tk()
+        ex = Planta(user, root)
+        ex.pack(fill="both", expand=True)
+        root.mainloop()        
