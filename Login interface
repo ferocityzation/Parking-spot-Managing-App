@@ -5,6 +5,7 @@ from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
 from Registar import Registar
+from Display import Display
 from Planta_parque import Planta
 
 class Login:
@@ -105,7 +106,6 @@ class Login:
 
     def login_success(self, message=""):
         self.app_end()
-        self.login_success_callback(message)
         
     def verificar_login(self):
         # Don't forget to call .get to actually get the text
@@ -129,8 +129,7 @@ class Login:
         for user_record in user_records:
             if user_record["username"] == username1:
                 if user_record["password"] == password1:
-                    self.chamar_planta(username1)  
-                    
+                    self.avancar(username1)
                     break
     
                 else:
@@ -143,7 +142,21 @@ class Login:
         else:
             showinfo(title='Erro no login',
                     message='Utlizador não encontrado')
-            
+    
+    def avancar(self,user):
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            user_records = yaml.load(f, Loader=yaml.FullLoader)
+
+        for user_record in user_records:
+            if user_record["username"] == user:
+                parking_status = user_record["parking_pass"]
+        
+        if parking_status == "inactive":
+            self.chamar_planta(user)  
+        else:
+            self.chamar_display(user)
+
     def chamar_planta (self, user):      
         self.app_end()
 
@@ -152,7 +165,14 @@ class Login:
             ex = Planta(user, root)
             ex.pack(fill="both", expand=True)
             root.mainloop()  
-            
+    
+    def chamar_display(self,user):
+        self.app_end()
+        root = tk.Tk()        
+        display = Display(root,user)
+        root.focus_force()
+        root.mainloop()
+        
     def chamar_registo (self):      
         self.app_end()
 
@@ -168,4 +188,3 @@ if __name__ == "__main__":
     login = Login(root)
     root.focus_force()
     root.mainloop()
-
