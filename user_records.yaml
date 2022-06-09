@@ -1,6 +1,15 @@
-- parking_pass: active
+- parking_pass: inactive
   password: test1
   username: test_user_1
 - parking_pass: inactive
   password: test2
   username: test_user_2
+- parking_pass: ('A', 3)
+  password: '123'
+  username: andre
+- parking_pass: ('A', 1)
+  password: ol123
+  username: ola
+- parking_pass: inactive
+  password: '1234'
+  username: andre1
