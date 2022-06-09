@@ -98,13 +98,20 @@ class Registar:
                 login_records.append({
                     "username": username1,
                     "password": password1,
-                    "parking_pass": "active",
+                    "parking_pass": "inactive",
                 })
                 
                 with open(user_records_file, "w+") as f:
                     f.write(yaml.dump(login_records))
+                
+                self.chamar_planta(username1) 
+
+    # def chamar_planta (self, user):      
+    #     self.app_end()
+    
+    #     if __name__ == "__main__":
+    #         root = tk.Tk()
+    #         ex = Planta(user, root)
+    #         ex.pack(fill="both", expand=True)
+    #         root.mainloop()  
         
-root = tk.Tk()
-registar = Registar(root)
-root.focus_force()
-root.mainloop()
