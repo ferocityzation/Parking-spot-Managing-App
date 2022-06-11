@@ -14,37 +14,41 @@ from Display import Display
 
 class Planta(tk.Frame):
     colunas = ["A","B","C","D","E"]
-    posicao = ""
     def __init__(self, user, root, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
         self.root = root
-        self.canvas = tk.Canvas(self, width=250, height=500)
+        self.canvas = tk.Canvas(self, width=270, height=500)
         self.canvas.pack(fill="both", expand=True)
 
         self.canvas.tag_bind("parking-spot", "<1>", self.change_color)
         self.count = 0
         self.draw()
         self.gestao_ocupacao()
+        self.matricula = self.buscar_matricula()
         
+        ttk.Label(self.canvas, text="\nA\n\n\n\n\n\n\nB\n\n\n\n\n\n\nC\n\n\n\n\n\n\nD\n\n\n\n\n\n\nE\n\n", font=('Helvetica', 8)).pack(padx=5, pady=20, side=tk.LEFT)
         tk.Label(self, text="\n").pack()
+        ttk.Label(self.root, text="              1              2              3              4               5              ", font=('Helvetica', 8)).pack()
+        ttk.Label(self, text="A sua matrícula é: "+ self.matricula, font=('Helvetica', 12)).pack()
+        tk.Label(self, text="\n").pack()
+        self.button_matricula = tk.Button(self,text="Reservar",command=self.chamar_display, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
         self.button_reservar = tk.Button(self,text="Reservar",command=self.chamar_display, font=('Helvetica', 13)) #função que vai reservar. Temos de pintar o retângulo de vermelho e temos de escrever no ficheiro yalm
         self.button_reservar.pack()
         self.button_precario = tk.Button(self,text="Preçário",command= self.precario_clicked, font=('Helvetica', 13))
         self.button_precario.pack()
         tk.Label(self, text="").pack()
         self.posicao = ""
-    
 
+    
     def draw(self):
         self.items = {}
         for vertical in range(5):   #ao andares na vertical, vais alterar a linha
             for horizontal in range(5): #vai-me prencheer ao longo das linhas
-                x = horizontal*50
+                x = horizontal*50+20
                 y = vertical*100
                 item = self.canvas.create_rectangle(x, y, x+50, y+80, fill="green", tags=("parking-spot",))
                 self.items[str((Planta.colunas[vertical],horizontal+1))] = item
-        
     def gestao_ocupacao(self):
         user_records_file = Path(__file__).parent / "user_records.yaml"
         with open(user_records_file, "r") as f:
@@ -53,6 +57,8 @@ class Planta(tk.Frame):
         for user_record in user_records:
             if user_record["parking_pass"] != "inactive":
                 self.canvas.itemconfigure(self.items[user_record["parking_pass"]], fill="red")
+                
+        f.close()
                 
 
     def change_color(self, event):
@@ -90,10 +96,22 @@ class Planta(tk.Frame):
         for login_record in login_records:
             if login_record["username"] == self.user:
                 login_record["parking_pass"] = lugar
+        f.close()
         with open(user_records_file, "w+") as f:
             f.write(yaml.dump(login_records))
         f.close()
     
+    def buscar_matricula(self):
+        user_records_file = Path(__file__).parent / "user_records.yaml"
+        with open(user_records_file, "r") as f:
+            login_records = yaml.load(f, Loader=yaml.FullLoader)
+    
+        for login_record in login_records:
+            if login_record["username"] == self.user:
+                matricula = login_record["matricula"]
+        
+        return matricula
+        
     def chamar_display(self):
         self.ocupar()
         self.root.destroy()
