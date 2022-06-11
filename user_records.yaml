@@ -16,3 +16,21 @@
 - parking_pass: ('E', 4)
   password: '1'
   username: final
+- parking_pass: inactive
+  password: '123'
+  username: Dani7
+- parking_pass: inactive
+  password: a123
+  username: a123
+- matricula: 42-CV-24
+  parking_pass: inactive
+  password: '123'
+  username: teste_final2
+- matricula: 32-cv-23
+  parking_pass: inactive
+  password: '1'
+  username: '1'
+- matricula: '3'
+  parking_pass: ('D', 2)
+  password: '2'
+  username: '2'
