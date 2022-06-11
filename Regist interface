@@ -80,11 +80,16 @@ class Registar:
             
     def registo(self):  
         username1 = self.username_entry.get()
-        print(username1)
         password1 = self.password_entry.get()
         password2 = self.confirmar_pass.get()
+        matricula = self.matricula.get()
+        
         utilizador = "não existe"
-        if password1 != password2:
+        
+        if (username1 == "") or( password1 == "") or (password2 =="") or (matricula==""):
+            showinfo(title='Problema com a daqos',
+                    message='Não pode deixar elementos em branco')            
+        elif password1 != password2:
             showinfo(title='Problema com a password',
                     message='As palavras-chaves têm de coincidir')
         else:    
@@ -107,9 +112,10 @@ class Registar:
                 login_records.append({
                     "username": username1,
                     "password": password1,
+                    "matricula": matricula,
                     "parking_pass": "inactive",
                 })
-                
+                f.close()
                 with open(user_records_file, "w+") as f:
                     f.write(yaml.dump(login_records))
                 f.close()
@@ -121,4 +127,4 @@ class Registar:
         root = tk.Tk()
         ex = Planta(user, root)
         ex.pack(fill="both", expand=True)
-        root.mainloop()        
+        root.mainloop()  
