@@ -17,7 +17,7 @@ class Display:
         self.user = user
         self.place = self.lugar()
         
-        self.root.geometry('230x120')
+        self.root.geometry('270x120')
         self.create_labels_display()
         
         
@@ -26,7 +26,7 @@ class Display:
 
 
         texto = tk.Label(self.root, text="O seu lugar é:")
-        texto2 = ttk.Label(self.root, text="Feche a app ou clique no botão para sair", style='Heading.TLabel', font=('Helvetica', 8))
+        texto2 = ttk.Label(self.root, text="Feche a app ou clique no botão para sair do parque", style='Heading.TLabel', font=('Helvetica', 8))
         lugar = ttk.Label(self.root, text=self.place, style='Heading.TLabel', font=('Helvetica', 13))
         button_sair = tk.Button(self.root,text="Vou sair do parque",  command= self.sair)     #button that runs the login verification
         texto.pack()
@@ -47,8 +47,10 @@ class Display:
 
         for user_record in user_records:
             if user_record["username"] == self.user:
-                return user_record["parking_pass"]
-            
+                lugar = user_record["parking_pass"]
+                break
+        f.close()
+        return lugar
             
     def sair(self):  #volta a reescrever "inativo" no ficheiro yalm
     
