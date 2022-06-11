@@ -70,23 +70,19 @@ class Login:
     def create_buttons(self):
         
         #Frame onde os butões ficarão alocados
-        # Never create instance variables outside of the init method
         frame_buttons = Frame(self.root)
         frame_buttons.grid(row=4,column=1)
         
         # Frame para editar os butões em conjunto
-        # Never create instance variables outside of the init method
         frame_edit_button = Frame(frame_buttons)
         frame_edit_button.grid(row=0,column=0, padx=20,pady=10)
         
         # criação butões 
-        # Never create instance variables outside of the init method
         button_login = Button(frame_edit_button,text="Login",  command= self.verificar_login, font=('Helvetica', 9))     #button that runs the login verification
         button_registar = Button(frame_edit_button,text="Registar",  command = self.chamar_registo, font=('Helvetica', 9))              #button that will take you the registration window
         button_precario = Button(frame_edit_button,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9)) #button that "precario" pop up
         
         # grid dos butões
-        # Never create instance variables outside of the init method
         button_login.grid(row=0,column=0, sticky=tk.E)
         button_registar.grid(row=0,column=1, sticky=tk.E)
         button_precario.grid(row=0,column=3, sticky=tk.E)
@@ -135,6 +131,7 @@ class Login:
             if user_record["username"] == username1:
                 if user_record["password"] == password1:
                     self.avancar(username1)
+                    f.close()
                     break
     
                 else:
@@ -142,6 +139,7 @@ class Login:
                         title='Incorrect password!',
                         message='Incorrect password! Try again'
                     )
+                    f.close()
                     break
     
         else:
@@ -156,7 +154,8 @@ class Login:
         for user_record in user_records:
             if user_record["username"] == user:
                 parking_status = user_record["parking_pass"]
-        
+                break
+        f.close()
         if parking_status == "inactive":
             self.chamar_planta(user)  
         else:
