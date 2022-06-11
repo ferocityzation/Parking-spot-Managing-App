@@ -1,27 +1,3 @@
-- parking_pass: inactive
-  password: test1
-  username: test_user_1
-- parking_pass: inactive
-  password: test2
-  username: test_user_2
-- parking_pass: inactive
-  password: '123'
-  username: andre
-- parking_pass: ('A', 1)
-  password: ol123
-  username: ola
-- parking_pass: ('B', 3)
-  password: '1234'
-  username: andre1
-- parking_pass: ('E', 4)
-  password: '1'
-  username: final
-- parking_pass: inactive
-  password: '123'
-  username: Dani7
-- parking_pass: inactive
-  password: a123
-  username: a123
 - matricula: 42-CV-24
   parking_pass: inactive
   password: '123'
