@@ -1,16 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  8 23:33:38 2022
-
-@author: André
-"""
-
-
 import tkinter as tk
-from tkinter.messagebox import showinfo
-import yaml
-from pathlib import Path
 from tkinter import ttk
+from tkinter import *
+from tkinter.messagebox import showinfo
+from pathlib import Path
+import yaml
 import datetime
 
 class Display:
@@ -22,6 +15,7 @@ class Display:
         self.root.geometry('270x120')
         self.create_labels_display()
         
+    
         
     def create_labels_display(self): 
         paragrafo = tk.Label(self.root, text="")
@@ -74,46 +68,44 @@ class Display:
         #calculo da estadia
         
         if h_entrada > h_saida:
-            hora_final = (h_saida + 24) - h_entrada
+            self.hora_final = (h_saida + 24) - h_entrada
         else:
-            hora_final = h_saida - h_entrada
+            self.hora_final = h_saida - h_entrada
             
         if m_entrada > m_saida:
-            minuto_final = (m_saida + 60) - m_entrada
+            self.minuto_final = (m_saida + 60) - m_entrada
         else:
-            minuto_final = m_saida - m_entrada
+            self.minuto_final = m_saida - m_entrada
         
-        print(f'A permanência foi de {hora_final} horas e {minuto_final} minutos.')
+        # print(f'A permanência foi de {hora_final} horas e {minuto_final} minutos.')
         
         #calculo do valor monetario
         
-        tempo_minutos = hora_final * 60 + minuto_final
+        tempo_minutos = self.hora_final * 60 + self.minuto_final
         
 
         if tempo_minutos == 0:
-            return None
+            preco = 0.00
         if 1 <= tempo_minutos <= 60:
             precario = 1
             preco = round(precario * (1/60)*tempo_minutos,2)
-            print(f'O valor a ser pago será de {float(preco):.2f}')
             
         elif 60 < tempo_minutos <= 120:
             precario =  0.5
             preco = round(1 + precario*(1/60)*tempo_minutos,2)
-            print(f'O valor a ser pago será de {float(preco):.2f}')
             
         elif 120 < tempo_minutos:
             precario = 0.25
             preco = round(1 + 1 + precario*(1/60)*tempo_minutos,2)
-            print(f'O valor a ser pago será de {float(preco):.2f}')
         
         if self.saldo >= preco:
             self.saldo = round(self.saldo - preco,2)
         else:
             showinfo(title='Saldo insuficiente',
-                    message='Foram adicionados 5.00 $')
+                    message='Foram adicionados 5.00 €')
             self.saldo = round(self.saldo + float(5) - preco,2)
-            
+        
+        self.preco = round(float(preco),2)
             
     def sair(self):  #volta a reescrever "inativo" no ficheiro yalm
         
@@ -130,4 +122,7 @@ class Display:
         with open(user_records_file, "w+") as f:
             f.write(yaml.dump(login_records))
         f.close()
+        
+        showinfo(title='Obrigado',
+                message='A sua permanência foi de: ' + str(self.hora_final) + " horas e " + str(self.minuto_final) + " minutos.\nO valor a ser pago será de " + str(self.preco) + "€." + "\nNuma próxima utilização terá: " + str(self.saldo) + "€.\nCaso não tenha saldo, este será reposto automaticamente.")
         self.root.destroy()
