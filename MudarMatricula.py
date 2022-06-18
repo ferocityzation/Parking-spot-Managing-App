@@ -3,9 +3,11 @@ from tkinter.messagebox import showinfo
 import yaml
 from pathlib import Path
 from tkinter import ttk
+from Gclass import Gclass
 
-class Mudar:
+class Mudar(Gclass):
     def __init__(self, root, user):  
+        super().__init__()
         self.root=root
         self.user = user
         
@@ -54,7 +56,4 @@ class Mudar:
         showinfo(title='Matrícula mudada com sucesso!',
                     message='Proceda agora para a escolha do seu lugar com a sua nova matrícula, a qual será atualizada na próxima utilização.')  
   
-        self.root.destroy()
-        
-
-
+        Gclass.app_end(self)        
