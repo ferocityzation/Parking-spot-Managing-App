@@ -1,12 +1,12 @@
-- matricula: 42-CV-24
+- h_entry: ND
+  matricula: '123'
   parking_pass: inactive
-  password: '123'
-  username: teste_final2
-- matricula: 32-cv-23
+  password: "#,ef^\xABe\xAB,"
+  saldo: 5.0
+  username: teste
+- h_entry: ND
+  matricula: '12'
   parking_pass: inactive
-  password: '1'
+  password: a
+  saldo: 4.87
   username: '1'
-- matricula: '3'
-  parking_pass: ('D', 2)
-  password: '2'
-  username: '2'
