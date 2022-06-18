@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun  5 17:47:39 2022
-@author: André
+Created on Sat Jun 11 12:03:36 2022
+
+@author: andre
 """
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import *
@@ -10,11 +12,14 @@ from tkinter.messagebox import showinfo
 from pathlib import Path
 import yaml
 from Planta_parque import Planta
+from Gclass import Gclass
+from Planta_caller import Planta_caller
 
 
-
-class Registar:
+class Registar(Gclass, Planta_caller):
     def __init__(self, root):
+        super().__init__()
+
     
         self.root = root
         self.username_entry = ""
@@ -67,13 +72,7 @@ class Registar:
         button_regist = Button(self.root,text="Registar",  command= self.registo, font=('Helvetica', 9))
         button_precario = Button(self.root,text="Preçário",command= self.precario_clicked, font=('Helvetica', 9))
         button_regist.pack()
-        button_precario.pack()
-        
-        
-    def app_end(self):
-        # fecha a app
-        self.root.destroy()
-        
+        button_precario.pack()       
     
     def precario_clicked(self):      #Creates the pop up that shows the price of the park. It's not really beautiful, but I'll look into it if I have any time left
         showinfo(title='Preçário', message='O preço deste parque é: \n   1ª hora: 1 euro \n   2ªhora: 0.5 euros \n   3ªhora ou mais: 0.25 euros')
@@ -105,26 +104,22 @@ class Registar:
                     break
             f.close()
             if utilizador == "não existe":
+                password_encriptada = Gclass.encriptar(password1)
                 user_records_file = Path(__file__).parent / "user_records.yaml"
                 with open(user_records_file, "r") as f:
                     login_records = yaml.load(f, Loader=yaml.FullLoader)
                 
                 login_records.append({
                     "username": username1,
-                    "password": password1,
+                    "password": password_encriptada,
                     "matricula": matricula,
                     "parking_pass": "inactive",
+                    "h_entry": "ND",
+                    "saldo": "5.00",
                 })
                 f.close()
                 with open(user_records_file, "w+") as f:
                     f.write(yaml.dump(login_records))
                 f.close()
-                self.chamar_planta(username1)
+                Planta_caller.chamar_planta(self,username1)
                 
-                
-    def chamar_planta (self, user): 
-        self.app_end()
-        root = tk.Tk()
-        ex = Planta(user, root)
-        ex.pack(fill="both", expand=True)
-        root.mainloop()  
