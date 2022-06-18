@@ -122,4 +122,3 @@ class Registar(Gclass, Planta_caller):
                     f.write(yaml.dump(login_records))
                 f.close()
                 Planta_caller.chamar_planta(self,username1)
-                
