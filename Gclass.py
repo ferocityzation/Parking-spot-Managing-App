@@ -11,6 +11,7 @@ from tkinter import *
 from pathlib import Path
 import yaml
 from Display import Display
+
 # from Planta_parque import Planta
 
 import sys
@@ -68,4 +69,4 @@ class Gclass:
                 pass_nova = pass_nova + letra
         
         return pass_nova
-        
+     
