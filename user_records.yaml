@@ -1,0 +1,24 @@
+- h_entry: ND
+  matricula: '123'
+  parking_pass: inactive
+  password: "#,ef^\xABe\xAB,"
+  saldo: 5.0
+  username: teste
+- h_entry: '15:13'
+  matricula: 10-BB-D1
+  parking_pass: ('C', 3)
+  password: a
+  saldo: 1.87
+  username: '1'
+- h_entry: ND
+  matricula: 4A-cv-A2
+  parking_pass: inactive
+  password: az
+  saldo: '5.00'
+  username: '3213'
+- h_entry: '15:15'
+  matricula: AA-CC-DD
+  parking_pass: ('B', 4)
+  password: a
+  saldo: '5.00'
+  username: '2'
