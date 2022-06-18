@@ -31,4 +31,4 @@ class Planta_caller:
         ex = Planta(user, root)
         ex.pack(fill="both", expand=True)
         root.mainloop()  
-            
+  
